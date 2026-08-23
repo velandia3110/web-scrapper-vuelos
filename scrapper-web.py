@@ -3,7 +3,9 @@ import re
 from playwright.sync_api import sync_playwright
 
 url = "https://www.latamairlines.com/co/es"
-condicion = r'^COP \d{1,3}(\.\d{3})*$'
+condicion = r'^COP [0-9]{1,3}(\.[0-9]{3})*$'
+
+precioMax = int(input("Ingrese el valor máximo del vuelo: "))
 
 try:
     with sync_playwright() as p:
@@ -28,7 +30,7 @@ try:
             for i, nombreCarrera in enumerate(spans, start=1):
                 if re.match(condicion, nombreCarrera):
                     precio = int(nombreCarrera.split(" ")[1].replace(".", ""))
-                    if precio < 9000000:
+                    if precio < precioMax:
                         print("  resultado    -->  " + nombreCarrera)
                         programas.append({"nombre": nombreCarrera})
                         programasObtenidos.append({"id": i, "nombre": nombreCarrera})
